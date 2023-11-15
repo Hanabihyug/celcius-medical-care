@@ -1,0 +1,130 @@
+image: node:16.17.1
+
+
+pipelines:
+  branches:
+    e2e:
+      - step:
+          name: E2E Testing
+          # runs-on:
+          #   - self.hosted
+          #   - linux
+          image: cypress/included:10.3.0
+          caches:
+            - cypress
+          script:
+            - npm install
+            - npm run ci:e2e
+          artifacts:
+            - cypress/screenshots/**
+    development:
+      - step:
+          name: E2E Testing
+          runs-on:
+            - self.hosted
+            - linux
+          image: cypress/included:10.3.0
+          caches:
+            - cypress
+          script:
+            - npm install
+            - npm run ci:e2e
+          artifacts:
+            - cypress/screenshots/**
+    # development:
+    #   - step:
+    #       caches:
+    #         - nodecustom
+    #         - yarn
+    #       name: Build Staging
+    #       # runs-on:
+    #       #   - self.hosted
+    #       #   - linux
+    #       script:
+    #         - echo "Compiling the code..."
+    #         - export REACT_APP_API=${REACT_APP_API_URL_DEV}
+    #         - export REACT_APP_STATUS=${REACT_APP_STATUS_DEV}
+    #         - export REACT_APP_MAPBOX_KEY=${REACT_APP_MAPBOX_KEY_DEV}
+    #         - export REACT_APP_GOOGLEMAPS_KEY=${REACT_APP_GOOGLEMAPS_KEY_DEV}
+    #         - export REACT_APP_TOKEN=${REACT_APP_TOKEN_DEV}
+    #         - export CI=false
+    #         - yarn install
+    #         - yarn react-scripts build
+    #         - echo "Compile complete."
+    #       artifacts:
+    #         - build/**
+    #   - step:
+    #       caches:
+    #         - nodecustom
+    #         - yarn
+    #       name: Deploy Staging
+    #       # runs-on:
+    #       #   - self.hosted
+    #       #   - linux
+    #       script:
+    #         - pipe: atlassian/aws-s3-deploy:1.1.0
+    #           variables:
+    #             AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+    #             AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    #             AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+    #             S3_BUCKET: $BUCKET_NAME_DEV
+    #             LOCAL_PATH: "build"
+    # master:
+    #   - step:
+    #       caches:
+    #         - nodecustom
+    #         - yarn
+    #       name: Build Production
+    #       # runs-on:
+    #       #   - self.hosted
+    #       #   - linux
+    #       script:
+    #         - echo "Compiling the code..."
+    #         - export REACT_APP_API=${REACT_APP_API_URL_PROD}
+    #         - export REACT_APP_STATUS=${REACT_APP_STATUS_PROD}
+    #         - export REACT_APP_MAPBOX_KEY=${REACT_APP_MAPBOX_KEY_PROD}
+    #         - export REACT_APP_GOOGLEMAPS_KEY=${REACT_APP_GOOGLEMAPS_KEY_PROD}
+    #         - export REACT_APP_TOKEN=${REACT_APP_TOKEN_PROD}
+    #         - export CI=false
+    #         - yarn install
+    #         - yarn react-scripts build
+    #         - echo "Compile complete."
+    #       artifacts:
+    #         - build/**
+      # - step:
+      #     caches:
+      #       - nodecustom
+      #       - yarn
+      #     name: Deploy to S3 Production
+      #     trigger: "manual"
+      #     runs-on:
+      #       - self.hosted
+      #       - linux
+      #     script:
+      #       - pipe: atlassian/aws-s3-deploy:1.1.0
+      #         variables:
+      #           AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      #           AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      #           AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      #           S3_BUCKET: $BUCKET_NAME_PROD
+      #           LOCAL_PATH: "build"
+      # - step:
+      #     caches:
+      #       - nodecustom
+      #       - yarn
+      #     name: Invalidate Cloudfront Cache
+      #     runs-on:
+      #       - self.hosted
+      #       - linux
+      #     script:
+      #       - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+      #         variables:
+      #           AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      #           AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      #           AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      #           DISTRIBUTION_ID: $CLOUDFRONT_DISTRIBUTION_ID
+definitions:
+  caches:
+    nodecustom: ./node_modules
+    yarn: /usr/local/share/.cache/yarn
+    cypress: ./Cypress
