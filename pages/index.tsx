@@ -14,9 +14,7 @@ import { ImWhatsapp } from "react-icons/im";
 import service from "@/public/assets/home/service.png";
 import service1 from "@/public/assets/home/service1.png";
 import service2 from "@/public/assets/home/service2.png";
-import hospital from "@/public/assets/home/bg-hospital.jpg";
-import deveureka from "@/public/assets/home/deveureka.png";
-import bghost from "@/public/assets/home/bg-host.jpg";
+import bg1 from "@/public/assets/home/bg1.jpg";
 import test1 from "@/public/assets/home/testimoni1.png";
 import test2 from "@/public/assets/home/testimoni2.png";
 import test3 from "@/public/assets/home/testimoni3.png";
@@ -95,7 +93,7 @@ export default function Home() {
           className="relative min-h-screen flex justify-center"
         >
           <Image
-            src={bghost}
+            src={bg1}
             alt=""
             loading="lazy"
             data-cy="hero-background"
